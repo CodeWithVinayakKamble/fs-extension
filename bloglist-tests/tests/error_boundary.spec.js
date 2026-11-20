@@ -30,17 +30,13 @@ test.describe("Error boundary", () => {
     await mockBlogWithMissingUser(page)
   })
 
-  test("a rendering error is caught and a friendly message is shown instead of a blank page", async ({
-    page,
-  }) => {
+  test("a rendering error is caught and a friendly message is shown instead of a blank page", async ({ page, }) => {
     await page.goto(`/blogs/${BROKEN_BLOG_ID}`)
 
     await expect(page.getByText(/something went wrong/i)).toBeVisible()
   })
 
-  test("the navigation bar stays outside the error boundary and remains usable", async ({
-    page,
-  }) => {
+  test("the navigation bar stays outside the error boundary and remains usable", async ({ page, }) => {
     await page.goto(`/blogs/${BROKEN_BLOG_ID}`)
 
     // ErrorBoundary (App.jsx) is not keyed to the route, so once it catches

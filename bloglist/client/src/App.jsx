@@ -13,6 +13,8 @@ import BlogList from './components/BlogList'
 import LoginForm from './components/LoginForm'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
+import ErrorBoundary from './components/ErrorBoundary'
+import NotFound from './components/NotFound'
 
 // ==== Services ==== //
 import loginServices from './services/login'
@@ -153,17 +155,21 @@ const App = () => {
 
       <Notification notification={notification} />
 
-      <Routes>
+      <ErrorBoundary>
+        <Routes>
 
-        <Route path='/' element={<BlogList blogs={blogs} />} />
+          <Route path='/' element={<BlogList blogs={blogs} />} />
 
-        <Route path='/login' element={user ? <Navigate replace to={'/'} /> : <LoginForm loginHandle={handleLogin} />} />
+          <Route path='/login' element={user ? <Navigate replace to={'/'} /> : <LoginForm loginHandle={handleLogin} />} />
 
-        <Route path='/blogs/:id' element={<Blog blog={blog} activeUser={user} increaseLikes={handleLike} deleteBlog={deleteBlogOf} />} />
+          <Route path='/blogs/:id' element={<Blog blog={blog} activeUser={user} increaseLikes={handleLike} deleteBlog={deleteBlogOf} />} />
 
-        <Route path='/create' element={user ? <BlogForm createNewBlog={addNewBlog} /> : <Navigate replace to='/login' />} />
+          <Route path='/create' element={user ? <BlogForm createNewBlog={addNewBlog} /> : <Navigate replace to='/login' />} />
 
-      </Routes>
+          <Route path='*' element={<NotFound />} />
+
+        </Routes>
+      </ErrorBoundary>
 
     </Container>
   )

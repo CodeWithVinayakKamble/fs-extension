@@ -65,3 +65,6 @@ export default defineConfig({
 }
 ```
  
+## step 4 : Added ErrorBoundary for BlogList App (fallback ui)
+
+## step 5 : Added A "Splat Route" (Wildcard Route) using path="*". In React Router, * means: "If no other route above matched this URL, catch it and render this fallback 404 page!"

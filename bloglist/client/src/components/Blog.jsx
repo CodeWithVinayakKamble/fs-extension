@@ -32,7 +32,7 @@ const Blog = ({ blog, increaseLikes, activeUser, deleteBlog }) => {
             <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Added by {user?.name || user?.username || 'anonymous'}
+            Added by {user.name}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
