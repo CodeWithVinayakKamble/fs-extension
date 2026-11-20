@@ -1,7 +1,12 @@
 import { Card, CardContent, Typography, Button, Box } from '@mui/material'
+import { useBlogs } from '../hooks/useBlogs'
+import { useParams } from 'react-router-dom'
 
-
-const Blog = ({ blog, increaseLikes, activeUser, deleteBlog }) => {
+const Blog = ({ activeUser }) => {
+  const { id } = useParams()
+  const { blogs, likeBlog, deleteBlog } = useBlogs()
+  const blog = blogs.find((b) => b.id === id)
+  
   if (!blog) {
     return <div>blog not found</div>
   }
@@ -38,7 +43,7 @@ const Blog = ({ blog, increaseLikes, activeUser, deleteBlog }) => {
               {likes} likes
             </Typography>
             {activeUser && (
-              <Button variant="outlined" size="small" onClick={() => increaseLikes(blog.id)}>
+              <Button variant="outlined" size="small" onClick={() => likeBlog(blog)}>
                 LIKE
               </Button>
             )}

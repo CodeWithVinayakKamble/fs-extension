@@ -1,6 +1,17 @@
 import { Link } from 'react-router-dom'
+import { useBlogs } from '../hooks/useBlogs'
 
-const BlogList = ({ blogs = [] }) => {
+const BlogList = () => {
+  const { blogs, isError, isPending } = useBlogs()
+
+  if (isError) {
+    return <span>blog service not available due to problems in server</span>
+  }
+
+  if (isPending) {
+    return <span>Loading...</span>
+  }
+
   const sortedBlog = [...blogs].sort((a, b) => b.likes - a.likes)
   return (
     <div>

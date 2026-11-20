@@ -27,12 +27,36 @@ export const useBlogs = () => {
         }
     })
 
+    const likeBlogMutation = useMutation({
+        mutationFn: (updatedBlog) => blogService.update(updatedBlog.id, updatedBlog),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['blogs'] })
+        },
+        onError: (error) => {
+            notify(error.response?.data?.error || error.message, 'error')
+        }
+    })
+
+    const deleteBlogMutation = useMutation({
+        mutationFn: blogService.remove,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['blogs'] })
+            notify(`blog removed successfully`, 'success')
+            navigate('/')
+        },
+        onError: (error) => {
+            notify(error.response.data.error)
+        }
+    })
+
 
 
     return {
         isPending: result.isPending,
         isError: result.isError,
         blogs: result.data,
-        addNewBlog: (newBlogObject) => newBlogMutation.mutate(newBlogObject)
+        addNewBlog: (newBlogObject) => newBlogMutation.mutate(newBlogObject),
+        likeBlog: (blog) => likeBlogMutation.mutate({ ...blog, likes: blog.likes + 1 }),
+        deleteBlog: (id) => deleteBlogMutation.mutate(id)
     }
 }

@@ -4,7 +4,7 @@
 
 // ==== Dependencies/Lib ==== //
 import { useState, useEffect } from 'react'
-import { Routes, Route, Link, Navigate, useNavigate, useMatch } from 'react-router-dom'
+import { Routes, Route, Link, Navigate, useNavigate} from 'react-router-dom'
 import { Container, AppBar, Toolbar, Button, Typography, Box } from '@mui/material'
 
 // ==== Components ==== //
@@ -20,14 +20,12 @@ import NotFound from './components/NotFound'
 import loginServices from './services/login'
 import blogServices from './services/blog'
 import { useNotify } from './contexts/NotificationContext'
-import { useBlogs } from './hooks/useBlogs'
 
 // ====================================== //
 // App
 // ====================================== //
 const App = () => {
   const [user, setUser] = useState(null)
-  const { blogs, isError, isPending } = useBlogs()
   const navigate = useNavigate()
   const notify = useNotify()
 
@@ -70,39 +68,6 @@ const App = () => {
     navigate('/')
   }
 
-  // ====================================== //
-  // Http Put method to change likes
-  // ====================================== //
-  const handleLike = async (id) => {
-    // const blog = blogs.find((b) => b.id === id)
-    // const changedBlog = { ...blog, likes: blog.likes + 1 }
-
-    // try {
-    //   const updatedBlog = await blogServices.update(id, changedBlog)
-    //   setBlogs(blogs.map((blog) => (blog.id === id ? { ...updatedBlog, user: blog.user } : blog)))
-    // } catch (error) {
-    //   console.log(`${error.response.data.error}`)
-    // }
-  }
-
-  // ====================================== //
-  // Http Delete Method
-  // ====================================== //
-  const deleteBlogOf = async (id) => {
-    console.log(id)
-  }
-
-  const match = useMatch('/blogs/:id')
-  const blog = match ? blogs?.find((blog) => blog.id === match.params.id) : undefined
-
-  if (isError) {
-    return <span>blog service not available due to problems in server</span>
-  }
-
-  if (isPending) {
-    return <span>Loading...</span>
-  }
-
   return (
     <Container>
       <AppBar position="static" sx={{ mb: 2 }}>
@@ -136,24 +101,14 @@ const App = () => {
 
       <ErrorBoundary>
         <Routes>
-          <Route path="/" element={<BlogList blogs={blogs} />} />
+          <Route path="/" element={<BlogList />} />
 
           <Route
             path="/login"
             element={user ? <Navigate replace to={'/'} /> : <LoginForm loginHandle={handleLogin} />}
           />
 
-          <Route
-            path="/blogs/:id"
-            element={
-              <Blog
-                blog={blog}
-                activeUser={user}
-                increaseLikes={handleLike}
-                deleteBlog={deleteBlogOf}
-              />
-            }
-          />
+          <Route path="/blogs/:id" element={<Blog activeUser={user} />} />
 
           <Route path="/create" element={user ? <BlogForm /> : <Navigate replace to="/login" />} />
 
