@@ -23,5 +23,4 @@ test('tesing newBlog form with approprite content', async () => {
   expect(createNewBlog.mock.calls[0][0].title).toBe('testing blog for 5.16 new blogForm Creation')
   expect(createNewBlog.mock.calls[0][0].author).toBe('vin')
   expect(createNewBlog.mock.calls[0][0].url).toBe('fso.com')
-
 })

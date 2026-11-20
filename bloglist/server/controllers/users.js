@@ -2,7 +2,6 @@ const userRouter = require('express').Router()
 const User = require('../models/user')
 const bcryptjs = require('bcryptjs')
 
-
 // ========================================== //
 // HTTP GET
 // ========================================== //
@@ -11,12 +10,10 @@ userRouter.get('/', async (request, response) => {
   response.json(users)
 })
 
-
 // ========================================== //
 // HTTP POST
 // ========================================== //
 userRouter.post('/', async (request, response) => {
-
   const { username, name, password } = request.body
 
   if (!username || username.length < 3) {
@@ -33,12 +30,11 @@ userRouter.post('/', async (request, response) => {
   const newUser = new User({
     username,
     name,
-    passwordHash
+    passwordHash,
   })
 
   const savedUser = await newUser.save()
   response.status(201).json(savedUser)
 })
-
 
 module.exports = userRouter

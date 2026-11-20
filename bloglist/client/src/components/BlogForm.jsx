@@ -2,20 +2,17 @@ import { useState } from 'react'
 import { TextField, Button, Box } from '@mui/material'
 
 const BlogForm = ({ createNewBlog }) => {
-
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
   const newBlog = (event) => {
-
     event.preventDefault()
-
 
     createNewBlog({
       title: title,
       author: author,
-      url: url
+      url: url,
     })
 
     setTitle('')
@@ -33,7 +30,7 @@ const BlogForm = ({ createNewBlog }) => {
             label="title"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
-            placeholder='title'
+            placeholder="title"
             required
           />
         </Box>
@@ -43,7 +40,7 @@ const BlogForm = ({ createNewBlog }) => {
             label="author"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
-            placeholder='author'
+            placeholder="author"
             required
           />
         </Box>
@@ -53,7 +50,7 @@ const BlogForm = ({ createNewBlog }) => {
             label="url"
             value={url}
             onChange={({ target }) => setUrl(target.value)}
-            placeholder='url'
+            placeholder="url"
             required
           />
         </Box>

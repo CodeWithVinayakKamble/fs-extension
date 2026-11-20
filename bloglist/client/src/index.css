@@ -1,25 +1,25 @@
 .notification {
-    background-color: #d6d1d1;
-    border: 3px solid;
-    padding: 0.5rem;
-    font-size: 1.5rem;
+  background-color: #d6d1d1;
+  border: 3px solid;
+  padding: 0.5rem;
+  font-size: 1.5rem;
 }
 
 .success {
-    border-color: green;
-    color: green;
+  border-color: green;
+  color: green;
 }
 
 .error {
-    border-color: red;
-    color: red;
+  border-color: red;
+  color: red;
 }
 
 .header {
-    margin-block-end: 0.5rem;
+  margin-block-end: 0.5rem;
 }
 
 .navbar {
-    display: flex;
-    gap: 0.8rem;
+  display: flex;
+  gap: 0.8rem;
 }

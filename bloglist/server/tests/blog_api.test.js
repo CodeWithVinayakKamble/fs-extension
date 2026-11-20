@@ -9,13 +9,11 @@ const initialBlogs = require('./blog_api_helper').initialBlogs
 const allBlogsInDb = require('./blog_api_helper').blogsAtEnd
 const bcryptjs = require('bcryptjs')
 
-
 const api = supertest(app)
 let token = null
 
 // ==== BeforEach (wipes previous DB data  & inserts initialBlogs) ==== //
 beforeEach(async () => {
-
   await Blog.deleteMany({})
   await User.deleteMany({})
 
@@ -29,19 +27,20 @@ beforeEach(async () => {
 
   token = loginResponse.body.token
 
-  const blogsWithOwner = initialBlogs.map(blog => ({ ...blog, user: dummyUser._id }))
+  const blogsWithOwner = initialBlogs.map((blog) => ({ ...blog, user: dummyUser._id }))
   await Blog.insertMany(blogsWithOwner)
 })
-
 
 // ======================================================= //
 // HTTP POST testing
 // ======================================================= //
 describe('Space for testing HTTP GET Request', () => {
-
   // ==== Request Hitting HTTP GET Request inbehalf of react and rest/postman ==== //
   test('HTTP GET Request', async () => {
-    await api.get('/api/blogs').expect(200).expect('Content-Type', /application\/json/)
+    await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
   })
 
   // ==== Response cachening and testing HTTP GET Request ==== //
@@ -51,27 +50,27 @@ describe('Space for testing HTTP GET Request', () => {
   })
 
   test('HTTP GET request and testing response data has parsed json id insted of object id', async () => {
-    const response = await api.get('/api/blogs').expect(200).expect('Content-Type', /application\/json/)
+    const response = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
     assert('id' in response.body[0])
     assert.strictEqual(response.body[0]._id, undefined)
   })
-
 })
 
 describe('space for testing HTTP POST request', () => {
-
   test('saved new Blog into db succesfully', async () => {
-
     const newBlog = {
       title: 'testing blog 4 : cheking HTTP Post Request',
       author: 'codeWithVinayakKamble',
       url: 'http://github.com/CodeWithVinayakKamble',
-      likes: 20
+      likes: 20,
     }
 
     const response = await api
       .post('/api/blogs')
-      .set('Authorization',`Bearer ${token}`)
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -80,16 +79,15 @@ describe('space for testing HTTP POST request', () => {
     assert.strictEqual(blogsInDb.length, initialBlogs.length + 1)
 
     // ==== verification test that actually post is saved in db ==== //
-    const titles = blogsInDb.map(blog => blog.title)
+    const titles = blogsInDb.map((blog) => blog.title)
     assert(titles.includes(response.body.title))
   })
 
   test('test case for likes if missed in request it should be deafult to 0', async () => {
-
     const newBlog = {
       title: 'testing blog 5 : for missing content should be redirect for default value',
       author: 'codeWithVinyakKamble',
-      url: 'http://github.com/CodeWithVinayakKamble'
+      url: 'http://github.com/CodeWithVinayakKamble',
     }
 
     const response = await api
@@ -103,50 +101,37 @@ describe('space for testing HTTP POST request', () => {
   })
 })
 
-
 describe('space for testing HTTP POST bad request', () => {
-
   test('test for bad request title missing', async () => {
-
     const newBlog = {
       author: 'codeWithVinayakKamble',
       url: 'http://github.com/CodeWithVinayakKamble',
-      likes: 25
+      likes: 25,
     }
 
-    await api.post('/api/blogs')
-      .send(newBlog)
-      .set('Authorization', `Bearer ${token}`)
-      .expect(400)
+    await api.post('/api/blogs').send(newBlog).set('Authorization', `Bearer ${token}`).expect(400)
     const blogsInDb = await allBlogsInDb()
     assert.strictEqual(blogsInDb.length, initialBlogs.length)
   })
 
   test('test for bad request URL missing', async () => {
-
     const newBlog = {
       title: 'testing blog 6 : url missing bad request',
       author: 'CodeWithVinayakKamble',
-      likes: 25
+      likes: 25,
     }
 
-    await api.post('/api/blogs')
-      .set('Authorization', `Bearer ${token}`)
-      .send(newBlog)
-      .expect(400)
+    await api.post('/api/blogs').set('Authorization', `Bearer ${token}`).send(newBlog).expect(400)
     const blogsInDb = await allBlogsInDb()
     assert.strictEqual(blogsInDb.length, initialBlogs.length)
   })
-
 })
 
 // ======================================================= //
 // HTTP DELETE testing
 // ======================================================= //
 describe('space for testing HTTP DELETE request', () => {
-
   test('for delete post Route', async () => {
-
     const grabbingBlog = await allBlogsInDb()
     const blogToDelete = grabbingBlog[0]
     await api
@@ -155,20 +140,18 @@ describe('space for testing HTTP DELETE request', () => {
       .expect(204)
 
     const updatedDb = await allBlogsInDb()
-    const ids = updatedDb.map(blog => blog.id)
+    const ids = updatedDb.map((blog) => blog.id)
     assert(!ids.includes(blogToDelete.id))
 
     assert.strictEqual(updatedDb.length, initialBlogs.length - 1)
   })
 })
 
-
 // ======================================================= //
 // HTTP PUT testing
 // ======================================================= //
 
 describe('space for testing HTTP PUT request', () => {
-
   test('for put post router', async () => {
     const getAllBlogs = await allBlogsInDb()
     const getFirstBlog = getAllBlogs[0]
@@ -179,7 +162,7 @@ describe('space for testing HTTP PUT request', () => {
       title: title,
       author: author,
       url: url,
-      likes: likes + 100
+      likes: likes + 100,
     }
 
     const response = await api
@@ -188,31 +171,23 @@ describe('space for testing HTTP PUT request', () => {
       .expect(200)
       .expect('Content-Type', /application\/json/)
 
-
     assert.strictEqual(response.body.likes, getFirstBlog.likes + 100)
   })
 })
-
 
 // ======================================================= //
 // Testing for Token Authentication and Authoriation HTTP POST
 // ======================================================= //
 
 describe('Testing JWT Authentication and authorization', () => {
-
   test('fails with 401 Unauthorized if token is not provided', async () => {
     const newBlog = {
       title: 'Blog without token',
-      url: 'https://notoken.com'
+      url: 'https://notoken.com',
     }
 
-    await api
-      .post('/api/blogs')
-      .send(newBlog)
-      .expect(401)
+    await api.post('/api/blogs').send(newBlog).expect(401)
   })
-
-
 })
 
 after(async () => {

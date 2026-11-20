@@ -17,7 +17,6 @@ const totalLikes = (blogs) => {
 // favorite Blogs
 // ============================== //
 const favoriteBlog = (blogs) => {
-
   if (blogs.length === 0) {
     return null
   }
@@ -31,15 +30,14 @@ const favoriteBlog = (blogs) => {
 // mostBlogs
 // ============================== //
 const mostBlogs = (blogs) => {
-
   if (blogs.length === 0) {
     return null
   }
 
   const blogCount = {}
 
-  blogs.forEach(blog => {
-    blogCount[blog.author] ? blogCount[blog.author] += 1 : blogCount[blog.author] = 1
+  blogs.forEach((blog) => {
+    blogCount[blog.author] ? (blogCount[blog.author] += 1) : (blogCount[blog.author] = 1)
   })
 
   const topBlogger = Object.keys(blogCount).reduce((topAuthor, currentAuthor) => {
@@ -48,7 +46,7 @@ const mostBlogs = (blogs) => {
 
   return {
     author: topBlogger,
-    blogs: blogCount[topBlogger]
+    blogs: blogCount[topBlogger],
   }
 }
 
@@ -56,15 +54,16 @@ const mostBlogs = (blogs) => {
 // mostLikes
 // ============================== //
 const mostLikes = (blogs) => {
-
   if (blogs.length === 0) {
     return 'Give me Real data !'
   }
 
   const likesCount = {}
 
-  blogs.forEach(blog => {
-    likesCount[blog.author] ? likesCount[blog.author] += blog.likes : likesCount[blog.author] = blog.likes
+  blogs.forEach((blog) => {
+    likesCount[blog.author]
+      ? (likesCount[blog.author] += blog.likes)
+      : (likesCount[blog.author] = blog.likes)
   })
 
   const mostLiked = Object.keys(likesCount).reduce((topBlogger, currentBlogger) => {
@@ -73,9 +72,8 @@ const mostLikes = (blogs) => {
 
   return {
     author: mostLiked,
-    likes: likesCount[mostLiked]
+    likes: likesCount[mostLiked],
   }
-
 }
 
 module.exports = { dummy, totalLikes, favoriteBlog, mostBlogs, mostLikes }

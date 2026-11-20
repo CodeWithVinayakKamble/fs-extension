@@ -10,10 +10,12 @@ const BlogList = ({ blogs }) => {
     <div>
       <h2>blogs</h2>
       <ul className="bloglist">
-        {sortedBlog.map(blog => {
+        {sortedBlog.map((blog) => {
           return (
             <li key={blog.id}>
-              <Link to={`/blogs/${blog.id}`}>{blog.title} by {blog.author}</Link>
+              <Link to={`/blogs/${blog.id}`}>
+                {blog.title} by {blog.author}
+              </Link>
             </li>
           )
         })}
@@ -21,6 +23,5 @@ const BlogList = ({ blogs }) => {
     </div>
   )
 }
-
 
 export default BlogList

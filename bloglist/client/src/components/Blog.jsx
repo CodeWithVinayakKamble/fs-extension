@@ -1,12 +1,8 @@
 import { Card, CardContent, Typography, Button, Box } from '@mui/material'
 
 const Blog = ({ blog, increaseLikes, activeUser, deleteBlog }) => {
-
-
   if (!blog) {
-    return (
-      <div>blog not found</div>
-    )
+    return <div>blog not found</div>
   }
 
   const { title, author, likes, url, user } = blog
@@ -29,7 +25,9 @@ const Blog = ({ blog, increaseLikes, activeUser, deleteBlog }) => {
             by {author}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1.5 }}>
-            <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              {url}
+            </a>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
             Added by {user.name}
@@ -39,21 +37,12 @@ const Blog = ({ blog, increaseLikes, activeUser, deleteBlog }) => {
               {likes} likes
             </Typography>
             {activeUser && (
-              <Button
-                variant="outlined"
-                size="small"
-                onClick={() => increaseLikes(blog.id)}
-              >
+              <Button variant="outlined" size="small" onClick={() => increaseLikes(blog.id)}>
                 LIKE
               </Button>
             )}
             {activeUser && blog?.user?.username === activeUser?.username && (
-              <Button
-                variant="outlined"
-                color="error"
-                size="small"
-                onClick={handleDelete}
-              >
+              <Button variant="outlined" color="error" size="small" onClick={handleDelete}>
                 REMOVE
               </Button>
             )}

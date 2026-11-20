@@ -2,20 +2,16 @@ import { useState } from 'react'
 import { TextField, Button, Box } from '@mui/material'
 
 const LoginForm = ({ loginHandle }) => {
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-
   const sendCredentialsToLoginHandle = (event) => {
-
     event.preventDefault()
 
     loginHandle({ username, password })
 
     setUsername('')
     setPassword('')
-
   }
 
   return (
@@ -49,7 +45,6 @@ const LoginForm = ({ loginHandle }) => {
       </form>
     </Box>
   )
-
 }
 
 export default LoginForm

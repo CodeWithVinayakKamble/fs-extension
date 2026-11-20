@@ -1,10 +1,8 @@
 import { screen, render } from '@testing-library/react'
 import Blog from './Blog'
 
-
 // Blog information and the number of likes are displayed to unauthenticated users, buttons are not displayed
 test('renders blog information to unauthenticated users and not buttons', () => {
-
   const testBlog = {
     title: 'guest user able to see only blog info not buttons',
     author: 'vinayak',
@@ -12,13 +10,15 @@ test('renders blog information to unauthenticated users and not buttons', () => 
     likes: 15,
     user: {
       name: 'vinayak kamble',
-      username: 'vinayakkamble'
-    }
+      username: 'vinayakkamble',
+    },
   }
 
   render(<Blog blog={testBlog} />)
 
-  const title = screen.getByText('guest user able to see only blog info not buttons', { exact: false })
+  const title = screen.getByText('guest user able to see only blog info not buttons', {
+    exact: false,
+  })
   const url = screen.getByRole('link', { name: 'example.com' })
   const likes = screen.getByText('15 likes', { exact: false })
 
@@ -34,10 +34,8 @@ test('renders blog information to unauthenticated users and not buttons', () => 
   expect(deleteBtn).toBeNull()
 })
 
-
 // Authenticated users who are not the blog’s creator are shown only the like button
 test('User B can able to see only User A blog post info and like button not remove button', () => {
-
   const testBlog = {
     title: 'userB able to see only blog info and like button',
     author: 'mattie lukkain',
@@ -45,19 +43,21 @@ test('User B can able to see only User A blog post info and like button not remo
     likes: 15,
     user: {
       name: 'vinayak kamble',
-      username: 'vinayakkamble'
-    }
+      username: 'vinayakkamble',
+    },
   }
 
   const userB = {
     name: 'vincent',
     username: 'vincent griffit',
-    token: 'hgjbknlmkjlhgfdfszxcvbnklljhuuytrsdxcvbnlkjhgfgdx'
+    token: 'hgjbknlmkjlhgfdfszxcvbnklljhuuytrsdxcvbnlkjhgfgdx',
   }
 
   render(<Blog blog={testBlog} activeUser={userB} />)
 
-  const title = screen.getByText('userB able to see only blog info and like button', { exact: false })
+  const title = screen.getByText('userB able to see only blog info and like button', {
+    exact: false,
+  })
   const url = screen.getByRole('link', { name: 'fullstackopne.com' })
   const likes = screen.getByText('15 likes', { exact: false })
 
@@ -73,7 +73,6 @@ test('User B can able to see only User A blog post info and like button not remo
   expect(deleteBtn).toBeNull()
 })
 
-
 // The blog’s creator is also shown the delete button
 test('Blog user can able to see remove button', () => {
   const testBlog = {
@@ -83,14 +82,14 @@ test('Blog user can able to see remove button', () => {
     likes: 15,
     user: {
       name: 'vinayak kamble',
-      username: 'vinayakkamble'
-    }
+      username: 'vinayakkamble',
+    },
   }
 
   const activeUser = {
     name: 'vinayak kamble',
     username: 'vinayakkamble',
-    token: 'hgjbknlmkjlhgfdfszxcsmh,jqvbnklljhuuytrsdxcvbnlkjhgfgdx'
+    token: 'hgjbknlmkjlhgfdfszxcsmh,jqvbnklljhuuytrsdxcvbnlkjhgfgdx',
   }
 
   render(<Blog blog={testBlog} activeUser={activeUser} />)
@@ -109,5 +108,4 @@ test('Blog user can able to see remove button', () => {
 
   expect(likeBtn).toBeInTheDocument()
   expect(deleteBtn).toBeInTheDocument()
-
 })

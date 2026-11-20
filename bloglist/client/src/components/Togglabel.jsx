@@ -6,7 +6,7 @@ const Togglabel = (props) => {
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
 
-  const toggleVisibility = () => (setVisible(!visible))
+  const toggleVisibility = () => setVisible(!visible)
 
   useImperativeHandle(props.ref, () => {
     return { toggleVisibility }
@@ -15,12 +15,16 @@ const Togglabel = (props) => {
   return (
     <div>
       <div style={hideWhenVisible}>
-        <button type="button" onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <button type="button" onClick={toggleVisibility}>
+          {props.buttonLabel}
+        </button>
       </div>
 
       <div style={showWhenVisible}>
         {props.children}
-        <button type="button" onClick={toggleVisibility}>cancel</button>
+        <button type="button" onClick={toggleVisibility}>
+          cancel
+        </button>
       </div>
     </div>
   )

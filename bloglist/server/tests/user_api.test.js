@@ -14,9 +14,7 @@ beforeEach(async () => {
 
 // ======================================== //
 
-
 describe('checking db length', () => {
-
   test('there is a zero users at initial state', async () => {
     const usersAtStart = await allUsersInDb()
 
@@ -32,15 +30,13 @@ describe('checking db length', () => {
 // ======================================== //
 
 describe('adding fresh user with valid credintials', () => {
-
   test('users.length should be 1 now', async () => {
-
     const usersAtStart = await allUsersInDb()
 
     const newUser = {
       username: 'admin_fso',
       name: 'vinayak',
-      password: 'admin@vinayak123'
+      password: 'admin@vinayak123',
     }
 
     const response = await api
@@ -52,24 +48,19 @@ describe('adding fresh user with valid credintials', () => {
     const usersAtEnd = await allUsersInDb()
 
     assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
-    const userNames = usersAtEnd.map(user => user.username)
+    const userNames = usersAtEnd.map((user) => user.username)
     assert(userNames.includes(response.body.username))
-
   })
-
 })
 
 // ======================================== //
 
 describe('testing for duplicate user && uniqueness by default', () => {
-
   test('expected error `username should be unique` and db length should remain same', async () => {
-
-
     const dummyUser = {
       username: 'admin_vinayak',
       name: 'vinayak',
-      password: 'admin@vinayak123'
+      password: 'admin@vinayak123',
     }
 
     await api.post('/api/users').send(dummyUser).expect(201)
@@ -79,42 +70,32 @@ describe('testing for duplicate user && uniqueness by default', () => {
     const newUser = {
       username: 'admin_vinayak',
       name: 'vinayak',
-      password: 'admin@vinayak123'
+      password: 'admin@vinayak123',
     }
 
-    const response = await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(400)
+    const response = await api.post('/api/users').send(newUser).expect(400)
 
     const usersAtEnd = await allUsersInDb()
 
     assert.strictEqual(usersAtEnd.length, usersAtStart.length)
 
     assert.strictEqual(response.body.error, 'expected `username` to be unique')
-
   })
-
 })
 
 // ======================================== //
 
 describe('Invalid users testing ,if user input less than 3 char in username or in password', () => {
-
   test('db length should be same invalid user should not get saved in db if put short username', async () => {
-
     const usersAtStart = await allUsersInDb() // 2
 
     const newUser = {
       username: 'vi',
       name: 'Vinayak',
-      password: 'shortUsername'
+      password: 'shortUsername',
     }
 
-    const response = await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(400)
+    const response = await api.post('/api/users').send(newUser).expect(400)
 
     const usersAtEnd = await allUsersInDb()
 
@@ -125,19 +106,15 @@ describe('Invalid users testing ,if user input less than 3 char in username or i
   // ======================================== //
 
   test('db length should be same invalid user should not get saved in db if put short password', async () => {
-
     const usersAtStart = await allUsersInDb() // 0
 
     const newUser = {
       username: 'admin_vinayak123',
       name: 'Vinayak',
-      password: 'sh'
+      password: 'sh',
     }
 
-    const response = await api
-      .post('/api/users')
-      .send(newUser)
-      .expect(400)
+    const response = await api.post('/api/users').send(newUser).expect(400)
 
     const usersAtEnd = await allUsersInDb()
 

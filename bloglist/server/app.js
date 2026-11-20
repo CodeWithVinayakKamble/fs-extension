@@ -11,7 +11,6 @@ const blogRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 
-
 // ================================== //
 // App Initialization
 // ================================== //
@@ -21,9 +20,10 @@ const app = express()
 // Data base (MongoDb) connection init
 // ================================== //
 logger.info('connecting to MongoDB')
-mongoose.connect(config.MONGODB_URI)
+mongoose
+  .connect(config.MONGODB_URI)
   .then(() => logger.info('Successfully connected to MongoDB Atlas (Cloud)...'))
-  .catch(error => logger.error(`Error connection to MongoDB : ${error.message}`))
+  .catch((error) => logger.error(`Error connection to MongoDB : ${error.message}`))
 //
 
 // ================================== //

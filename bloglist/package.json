@@ -6,9 +6,11 @@
     "dev:server": "npm --prefix server run dev",
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "build": "npm --prefix client run build",
-    "start": "npm --prefix server start"
+    "start": "npm --prefix server start",
+    "format": "prettier --write \"**/*.{js,jsx,json,css,md}\""
   },
   "devDependencies": {
-    "concurrently": "^10.0.7"
+    "concurrently": "^10.0.7",
+    "prettier": "^3.10.1"
   }
 }
