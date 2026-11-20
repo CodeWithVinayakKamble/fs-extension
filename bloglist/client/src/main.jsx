@@ -3,11 +3,14 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router } from 'react-router-dom'
 import './index.css'
 import App from './App'
+import { NotificationContextProvider } from './contexts/NotificationContext'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Router>
-      <App />
-    </Router>
+    <NotificationContextProvider>
+      <Router>
+        <App />
+      </Router>
+    </NotificationContextProvider>
   </StrictMode>
 )

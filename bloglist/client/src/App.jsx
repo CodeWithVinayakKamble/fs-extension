@@ -19,6 +19,7 @@ import NotFound from './components/NotFound'
 // ==== Services ==== //
 import loginServices from './services/login'
 import blogServices from './services/blog'
+import { useNotify } from './contexts/NotificationContext'
 
 // ====================================== //
 // App
@@ -28,6 +29,7 @@ const App = () => {
   const [blogs, setBlogs] = useState([])
   const [notification, setNotification] = useState(null)
   const navigate = useNavigate()
+  const notify = useNotify()
 
   // ====================================== //
   // Getting allBlogs from server
@@ -59,15 +61,9 @@ const App = () => {
       setUser(user)
       blogServices.setToken(user.token)
       navigate('/')
-      setNotification({ message: `${username} log in successfully`, type: 'success' })
-      setTimeout(() => {
-        setNotification(null)
-      }, 3000)
+      notify(`${username} log in successfully`, 'success')
     } catch (error) {
-      setNotification({ message: error.response.data.error, type: 'error' })
-      setTimeout(() => {
-        setNotification(null)
-      }, 3000)
+      notify(error.response.data.error, 'error')
     }
   }
 
@@ -78,10 +74,6 @@ const App = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
     setUser(null)
     navigate('/')
-    setNotification({ message: `${user?.username} logged out successfully`, type: 'success' })
-    setTimeout(() => {
-      setNotification(null)
-    }, 3000)
   }
 
   // ====================================== //
@@ -92,18 +84,8 @@ const App = () => {
       const savedBlog = await blogServices.create(newBlogObject)
       setBlogs([...blogs, { ...savedBlog, user }])
       navigate('/')
-      setNotification({
-        message: `a new blog ${savedBlog.title} by ${savedBlog.author} added`,
-        type: 'success',
-      })
-      setTimeout(() => {
-        setNotification(null)
-      }, 3000)
     } catch (error) {
-      setNotification({ message: `${error.response.data.error}`, type: 'error' })
-      setTimeout(() => {
-        setNotification(null)
-      }, 3000)
+      console.log(error)
     }
   }
 
@@ -167,7 +149,7 @@ const App = () => {
         </Toolbar>
       </AppBar>
 
-      <Notification notification={notification} />
+      <Notification />
 
       <ErrorBoundary>
         <Routes>

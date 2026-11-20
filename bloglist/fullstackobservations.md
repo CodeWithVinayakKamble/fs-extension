@@ -102,3 +102,25 @@ package-lock.json
 ```
 
 - add script to bloglist package.json - {"format": "prettier --write \"**/*.{js,jsx,json,css,md}\""}
+
+## step 7 : setting global Notification system using React api context - Notification context using useReducer insted of useState
+
+- why ?
+### The Big Difference: "Scattered Logic" vs. "Centralized Logic"
+1. With useState (Logic is Scattered Everywhere)
+
+- Imagine 5 different components need to show notifications:
+
+- LoginForm.jsx writes: setNotification({ text: 'Wrong password', type: 'error' })
+- BlogForm.jsx writes: setNotification({ text: 'Blog created', type: 'success' })
+- Blog.jsx writes: setNotification({ text: 'Liked blog', type: 'info' })
+- Timeout writes: setNotification(null)
+
+- **The Nightmare**: What if tomorrow you decide to change the notification object from { text, type } to { message, variant, id }? You have to open 5 different files and rewrite every single setNotification line!
+
+2. With useReducer (Logic is Centralized in ONE Room) 🏢
+
+- With useReducer, components never touch the state directly. They only shout what happened:
+
+- LoginForm.jsx: dispatch({ type: 'SHOW_ERROR', payload: 'Wrong password' })
+- BlogForm.jsx: dispatch({ type: 'SHOW_SUCCESS', payload: 'Blog created' })
