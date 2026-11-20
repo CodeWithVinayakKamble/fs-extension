@@ -1,0 +1,94 @@
+const blogRouter = require('express').Router()
+const Blog = require('../models/blog')
+const { userExtractor } = require('../utils/middleware')
+
+
+
+
+// ==== HTTP GET Router ==== //
+blogRouter.get('/', async (request, response) => {
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
+  response.json(blogs)
+})
+
+
+// ================================== //
+// HTTP POST Route
+// ================================== //
+blogRouter.post('/', userExtractor, async (request, response) => {
+
+  const user = request.user
+
+  if (!request.body) {
+    return response.status(400).json({ error: 'Content Missing' })
+  }
+
+  const { title, author, url, likes } = request.body
+
+  if (!title) {
+    return response.status(400).send({ error: 'Title Missing' })
+  }
+
+  if (!url) {
+    return response.status(400).send({ error: 'Url Missing' })
+  }
+
+
+  const newBlog = new Blog({
+    title: title,
+    author: author,
+    url: url,
+    likes: likes || 0,
+    user: user._id
+  })
+
+  const savedBlog = await newBlog.save()
+  user.blogs = user.blogs.concat(savedBlog._id)
+  await user.save()
+  await savedBlog.populate('user', { username: 1, name: 1 })
+  response.status(201).json(savedBlog)
+})
+
+
+// ================================== //
+// HTTP DELETE Route
+// ================================== //
+blogRouter.delete('/:id', userExtractor, async (request, response) => {
+
+  const user = request.user
+
+  const blogId = request.params.id
+
+  const blog = await Blog.findById(blogId)
+
+  if (!blog) {
+    return response.status(404).json({ error: 'blog not found' })
+  }
+
+  if (!blog.user || user._id.toString() !== blog.user.toString()) {
+    return response.status(403).json({ error: 'only the creator can delete a blog' })
+  }
+
+  await Blog.findByIdAndDelete(blogId)
+
+  user.blogs = user.blogs.filter(id => id.toString() !== blogId)
+  await user.save()
+  response.status(204).end()
+})
+
+// ================================== //
+// HTTP PUT Route
+// ================================== //
+blogRouter.put('/:id', async (request, response) => {
+
+  const id = request.params.id
+  const { title, author, url, likes } = request.body
+  const blog = { title, author, url, likes }
+
+  const updatedBlog = await Blog.findByIdAndUpdate(id, blog, { returnDocument: 'after', runValidators: true, context: 'query' })
+
+  response.json(updatedBlog)
+
+})
+
+module.exports = blogRouter

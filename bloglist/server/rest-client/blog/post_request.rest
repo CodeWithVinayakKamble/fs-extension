@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: put here token
+
+{
+    "title":"testing second blog post",
+    "author":"fso-vinayak",
+    "url":"https://github.com/CodeWithVinayakKamble",
+    "likes":10
+}
