@@ -6,7 +6,7 @@
 
 ### Process :
 
-- windows powerhose tool **robocopy** (robustfilecopy)
+- windows powershell tool **robocopy** (robustfilecopy)
 
   - robocopy <SOURCE_FOLDER> <DESTINATION_FOLDER> /E /XD node_modules .git (use "" powershell understand better pathing)
 
@@ -17,7 +17,9 @@
   - /XD node_modules .git → eXclude Directories named node_modules and .git (so you don't copy 500 MB of junk!).
 
   #### copying server
-  - robocopy ".\fso-part0-to-part5-foundation\part4\blog-list" ".\fso-part7-extension\bloglist\server" /E /XD node_modules .git1
+  - robocopy ".\fso-part0-to-part5-foundation\part4\blog-list" ".\fso-part7-extension\bloglist\server" /E /XD node_modules .git
+
+---
 
 ## step 2 : clean installation than just install - npm ci
 
@@ -25,6 +27,8 @@
 - npm --prefix server ci
 
 - Do NOT run npm audit fix --force
+
+---
 
 ## step 3 : lets set remote controll of the project
 
@@ -71,10 +75,15 @@ export default defineConfig({
   }
 }
 ```
+---
 
 ## step 4 : Added ErrorBoundary for BlogList App (fallback ui)
 
+---
+
 ## step 5 : Added A "Splat Route" (Wildcard Route) using path="*". In React Router, * means: "If no other route above matched this URL, catch it and render this fallback 404 page!"
+
+---
 
 ## step 6 : ESLint vs. Prettier (The Bug Police vs. The Stylist)
 
@@ -103,6 +112,8 @@ package-lock.json
 
 - add script to bloglist package.json - {"format": "prettier --write \"**/*.{js,jsx,json,css,md}\""}
 
+---
+
 ## step 7 : setting global Notification system using React api context - Notification context using useReducer insted of useState
 
 - why ?
@@ -124,3 +135,35 @@ package-lock.json
 
 - LoginForm.jsx: dispatch({ type: 'SHOW_ERROR', payload: 'Wrong password' })
 - BlogForm.jsx: dispatch({ type: 'SHOW_SUCCESS', payload: 'Blog created' })
+
+---
+
+## step 8 : server-site state management using tanStack Query
+
+#### Naming Conventions
+- For queries/mutations as custom hooks:
+  - src/hooks/useBlogs.js (preferred in modern React) or src/queries/blogQueries.js.
+  - If a file exports custom hooks, name it with camelCase starting with use (e.g., useBlogs.js).
+
+- Hook & Function Naming
+  - Custom hook returning query results: useBlogs or useBlogsQuery.
+  - Custom hook returning mutations: useCreateBlog, useLikeBlog, useDeleteBlog.
+
+---
+
+### setup for tanstack 
+
+- installation from root(bloglist)
+  - npm --prefix client install @tanstack/react-query
+  - npm --prefix server install express
+
+- Install @tanstack/react-query inside client/
+
+- creating nested folder from root(bloglist) commmand line
+  - New-Item -ItemType Directory -Force client/src/hooks; New-Item client/src/hooks/useBlog.js
+
+    - (-ItemType Directory) - itemtype directory,file
+
+    - (-Force) - Prevents errors: If the hooks folder already exists, PowerShell won't crash with an "Item already exists" error. Creates parents: If src didn't exist for some reason, -Force would create both src and hooks together in one go.
+
+    - ; (The Semicolon) - What it means: Command separator. ; First: Create the directory. ; Then: Create the file.

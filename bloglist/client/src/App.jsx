@@ -20,27 +20,21 @@ import NotFound from './components/NotFound'
 import loginServices from './services/login'
 import blogServices from './services/blog'
 import { useNotify } from './contexts/NotificationContext'
+import { useBlogs } from './hooks/useBlogs'
 
 // ====================================== //
 // App
 // ====================================== //
 const App = () => {
   const [user, setUser] = useState(null)
-  const [blogs, setBlogs] = useState([])
-  const [notification, setNotification] = useState(null)
+  const { blogs, isError, isPending } = useBlogs()
   const navigate = useNavigate()
   const notify = useNotify()
 
   // ====================================== //
-  // Getting allBlogs from server
-  // ====================================== //
-  useEffect(() => {
-    blogServices.getAll().then((allBlogs) => setBlogs(allBlogs))
-  }, [])
-
-  // ====================================== //
   // Getting user from localStorage
   // ====================================== //
+
   useEffect(() => {
     const loggedUserInLocalStorage = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserInLocalStorage) {
@@ -77,48 +71,37 @@ const App = () => {
   }
 
   // ====================================== //
-  // Adding/sending valid newBlog to server via axios Post Method
-  // ====================================== //
-  const addNewBlog = async (newBlogObject) => {
-    try {
-      const savedBlog = await blogServices.create(newBlogObject)
-      setBlogs([...blogs, { ...savedBlog, user }])
-      navigate('/')
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  // ====================================== //
   // Http Put method to change likes
   // ====================================== //
   const handleLike = async (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    const changedBlog = { ...blog, likes: blog.likes + 1 }
+    // const blog = blogs.find((b) => b.id === id)
+    // const changedBlog = { ...blog, likes: blog.likes + 1 }
 
-    try {
-      const updatedBlog = await blogServices.update(id, changedBlog)
-      setBlogs(blogs.map((blog) => (blog.id === id ? { ...updatedBlog, user: blog.user } : blog)))
-    } catch (error) {
-      console.log(`${error.response.data.error}`)
-    }
+    // try {
+    //   const updatedBlog = await blogServices.update(id, changedBlog)
+    //   setBlogs(blogs.map((blog) => (blog.id === id ? { ...updatedBlog, user: blog.user } : blog)))
+    // } catch (error) {
+    //   console.log(`${error.response.data.error}`)
+    // }
   }
 
   // ====================================== //
   // Http Delete Method
   // ====================================== //
   const deleteBlogOf = async (id) => {
-    try {
-      await blogServices.remove(id)
-      setBlogs(blogs.filter((blog) => blog.id !== id))
-      navigate('/')
-    } catch (error) {
-      console.log(`${error.response.data.error}`)
-    }
+    console.log(id)
   }
 
   const match = useMatch('/blogs/:id')
-  const blog = match ? blogs.find((blog) => blog.id === match.params.id) : null
+  const blog = match ? blogs?.find((blog) => blog.id === match.params.id) : undefined
+
+  if (isError) {
+    return <span>blog service not available due to problems in server</span>
+  }
+
+  if (isPending) {
+    return <span>Loading...</span>
+  }
 
   return (
     <Container>
@@ -172,12 +155,7 @@ const App = () => {
             }
           />
 
-          <Route
-            path="/create"
-            element={
-              user ? <BlogForm createNewBlog={addNewBlog} /> : <Navigate replace to="/login" />
-            }
-          />
+          <Route path="/create" element={user ? <BlogForm /> : <Navigate replace to="/login" />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

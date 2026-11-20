@@ -1,5 +1,6 @@
 import { Card, CardContent, Typography, Button, Box } from '@mui/material'
 
+
 const Blog = ({ blog, increaseLikes, activeUser, deleteBlog }) => {
   if (!blog) {
     return <div>blog not found</div>

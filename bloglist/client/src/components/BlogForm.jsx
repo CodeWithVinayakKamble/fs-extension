@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { TextField, Button, Box } from '@mui/material'
+import { useBlogs } from '../hooks/useBlogs'
 
-const BlogForm = ({ createNewBlog }) => {
+const BlogForm = () => {
+  const { addNewBlog } = useBlogs()
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const newBlog = (event) => {
+  const createNewBlog = (event) => {
     event.preventDefault()
 
-    createNewBlog({
+    addNewBlog({
       title: title,
       author: author,
       url: url,
@@ -23,7 +25,7 @@ const BlogForm = ({ createNewBlog }) => {
   return (
     <Box sx={{ mt: 3, maxWidth: 500 }}>
       <h2>create new</h2>
-      <form onSubmit={newBlog}>
+      <form onSubmit={createNewBlog}>
         <Box sx={{ mb: 2 }}>
           <TextField
             fullWidth

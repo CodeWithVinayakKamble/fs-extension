@@ -1,11 +1,7 @@
 import { Link } from 'react-router-dom'
 
-const BlogList = ({ blogs }) => {
-  // ====================================== //
-  // BlogsByMostLike
-  // ====================================== //
+const BlogList = ({ blogs = [] }) => {
   const sortedBlog = [...blogs].sort((a, b) => b.likes - a.likes)
-
   return (
     <div>
       <h2>blogs</h2>
