@@ -3,8 +3,7 @@
 // ====================================== //
 
 // ==== Dependencies/Lib ==== //
-import { useState, useEffect } from 'react'
-import { Routes, Route, Link, Navigate, useNavigate} from 'react-router-dom'
+import { Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom'
 import { Container, AppBar, Toolbar, Button, Typography, Box } from '@mui/material'
 
 // ==== Components ==== //
@@ -19,39 +18,27 @@ import NotFound from './components/NotFound'
 // ==== Services ==== //
 import loginServices from './services/login'
 import blogServices from './services/blog'
-import { useNotify } from './contexts/NotificationContext'
 
-// ====================================== //
-// App
-// ====================================== //
+// ==== Contexts ==== //
+import { useNotify } from './contexts/NotificationContext'
+import { useUserValue, useUserDispatch } from './contexts/UserContext'
+
+
 const App = () => {
-  const [user, setUser] = useState(null)
+  const activeUser = useUserValue()
+  const userDispatch = useUserDispatch()
   const navigate = useNavigate()
   const notify = useNotify()
-
-  // ====================================== //
-  // Getting user from localStorage
-  // ====================================== //
-
-  useEffect(() => {
-    const loggedUserInLocalStorage = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUserInLocalStorage) {
-      const user = JSON.parse(loggedUserInLocalStorage)
-      setUser(user)
-      blogServices.setToken(user.token)
-    }
-  }, [])
 
   // ====================================== //
   // Log-in Logic
   // ====================================== //
   const handleLogin = async ({ username, password }) => {
     try {
-      const user = await loginServices.login({ username, password })
-      console.log('Logged in with', username)
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-      setUser(user)
-      blogServices.setToken(user.token)
+      const loggedInUser = await loginServices.login({ username, password })
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(loggedInUser))
+      userDispatch({ type: 'SET', payload: loggedInUser })
+      blogServices.setToken(loggedInUser.token)
       navigate('/')
       notify(`${username} log in successfully`, 'success')
     } catch (error) {
@@ -64,7 +51,9 @@ const App = () => {
   // ====================================== //
   const handleLogOut = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
-    setUser(null)
+    blogServices.setToken(null)
+    notify(`${activeUser.username} log out successfully`, 'success')
+    userDispatch({ type: 'CLEAR' })
     navigate('/')
   }
 
@@ -79,12 +68,12 @@ const App = () => {
             <Button color="inherit" component={Link} to="/">
               blogs
             </Button>
-            {user && (
+            {activeUser && (
               <Button color="inherit" component={Link} to="/create">
                 new blog
               </Button>
             )}
-            {user ? (
+            {activeUser ? (
               <Button color="inherit" onClick={handleLogOut}>
                 logout
               </Button>
@@ -105,12 +94,17 @@ const App = () => {
 
           <Route
             path="/login"
-            element={user ? <Navigate replace to={'/'} /> : <LoginForm loginHandle={handleLogin} />}
+            element={
+              activeUser ? <Navigate replace to={'/'} /> : <LoginForm loginHandle={handleLogin} />
+            }
           />
 
-          <Route path="/blogs/:id" element={<Blog activeUser={user} />} />
+          <Route path="/blogs/:id" element={<Blog />} />
 
-          <Route path="/create" element={user ? <BlogForm /> : <Navigate replace to="/login" />} />
+          <Route
+            path="/create"
+            element={activeUser ? <BlogForm /> : <Navigate replace to="/login" />}
+          />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

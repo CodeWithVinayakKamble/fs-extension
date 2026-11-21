@@ -1,11 +1,17 @@
 import { Card, CardContent, Typography, Button, Box } from '@mui/material'
 import { useBlogs } from '../hooks/useBlogs'
 import { useParams } from 'react-router-dom'
+import { useUserValue } from '../contexts/UserContext'
 
-const Blog = ({ activeUser }) => {
+const Blog = () => {
   const { id } = useParams()
-  const { blogs, likeBlog, deleteBlog } = useBlogs()
+  const { blogs, isPending, likeBlog, deleteBlog } = useBlogs()
+  const activeUser = useUserValue()
   const blog = blogs.find((b) => b.id === id)
+
+  if (isPending) {
+    return <span>Loading...</span>
+  }
   
   if (!blog) {
     return <div>blog not found</div>
