@@ -15,6 +15,7 @@ import BlogForm from './components/BlogForm'
 import ErrorBoundary from './components/ErrorBoundary'
 import NotFound from './components/NotFound'
 import UserList from './components/UserList'
+import User from './components/User'
 
 // ==== Services ==== //
 import loginServices from './services/login'
@@ -97,11 +98,12 @@ const App = () => {
 
       <ErrorBoundary>
         <Routes>
-
           <Route path="/" element={<BlogList />} />
 
           <Route path="/users" element={<UserList />} />
-          
+
+          <Route path="/users/:id" element={<User />} />
+
           <Route
             path="/login"
             element={
@@ -117,9 +119,7 @@ const App = () => {
           />
 
           <Route path="*" element={<NotFound />} />
-          
         </Routes>
-
       </ErrorBoundary>
     </Container>
   )

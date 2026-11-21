@@ -7,7 +7,7 @@ const Blog = () => {
   const { id } = useParams()
   const { blogs, isPending, likeBlog, deleteBlog } = useBlogs()
   const activeUser = useUserValue()
-  const blog = blogs.find((b) => b.id === id)
+  const blog = blogs?.find((b) => b.id === id)
 
   if (isPending) {
     return <span>Loading...</span>
