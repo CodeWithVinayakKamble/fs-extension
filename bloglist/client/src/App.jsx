@@ -20,6 +20,7 @@ import User from './components/User'
 // ==== Services ==== //
 import loginServices from './services/login'
 import blogServices from './services/blog'
+import persistentUserService from './services/persistentUser'
 
 // ==== Contexts ==== //
 import { useNotify } from './contexts/NotificationContext'
@@ -37,7 +38,7 @@ const App = () => {
   const handleLogin = async ({ username, password }) => {
     try {
       const loggedInUser = await loginServices.login({ username, password })
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(loggedInUser))
+      persistentUserService.saveUser(loggedInUser)
       userDispatch({ type: 'SET', payload: loggedInUser })
       blogServices.setToken(loggedInUser.token)
       navigate('/')
@@ -51,7 +52,7 @@ const App = () => {
   // Log-out - Logic
   // ====================================== //
   const handleLogOut = () => {
-    window.localStorage.removeItem('loggedBlogAppUser')
+    persistentUserService.removeUser()
     blogServices.setToken(null)
     notify(`${activeUser.username} log out successfully`, 'success')
     userDispatch({ type: 'CLEAR' })
