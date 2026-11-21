@@ -75,6 +75,7 @@ export default defineConfig({
   }
 }
 ```
+
 ---
 
 ## step 4 : Added ErrorBoundary for BlogList App (fallback ui)
@@ -114,10 +115,12 @@ package-lock.json
 
 ---
 
-## step 7 : setting global Notification system using React api context - Notification context using useReducer insted of useState
+## step 7 : setting global Notification system using React api context - Notification context using useReducer insted of useState /hooks/NotificationContext.jsx
 
 - why ?
+
 ### The Big Difference: "Scattered Logic" vs. "Centralized Logic"
+
 1. With useState (Logic is Scattered Everywhere)
 
 - Imagine 5 different components need to show notifications:
@@ -138,9 +141,10 @@ package-lock.json
 
 ---
 
-## step 8 : server-site state management using tanStack Query
+## step 8 : server-site (blogs) and (users) state management using tanStack Query /hooks/useBlogs.js || useUsers.js
 
 #### Naming Conventions
+
 - For queries/mutations as custom hooks:
   - src/hooks/useBlogs.js (preferred in modern React) or src/queries/blogQueries.js.
   - If a file exports custom hooks, name it with camelCase starting with use (e.g., useBlogs.js).
@@ -151,7 +155,9 @@ package-lock.json
 
 ---
 
-### setup for tanstack 
+## step 9 : global state management for users done by react context api in /context/UserContext.jsx
+
+### setup for tanstack
 
 - installation from root(bloglist)
   - npm --prefix client install @tanstack/react-query
@@ -167,3 +173,12 @@ package-lock.json
     - (-Force) - Prevents errors: If the hooks folder already exists, PowerShell won't crash with an "Item already exists" error. Creates parents: If src didn't exist for some reason, -Force would create both src and hooks together in one go.
 
     - ; (The Semicolon) - What it means: Command separator. ; First: Create the directory. ; Then: Create the file.
+
+---
+
+## window.localStorage is synchronous! You can read it before the first render ever happens using an initializer function:
+
+- The Modern Fix: "Lazy Synchronous Initial State"
+- Why wait for useEffect to read localStorage?
+- // A helper function to read user synchronously on startup:
+- // Pass getInitialUser as the 3rd argument to useReducer (the initializer!):

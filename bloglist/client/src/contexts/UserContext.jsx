@@ -1,4 +1,4 @@
-import { createContext, useContext, useReducer, useEffect } from 'react'
+import { createContext, useContext, useReducer} from 'react'
 import blogService from '../services/blog'
 
 const UserContext = createContext()
@@ -14,17 +14,18 @@ const userReducer = (state, action) => {
   }
 }
 
-export const UserContextProvider = ({ children }) => {
-  const [user, userDispatch] = useReducer(userReducer, null)
+const getInitialUser = () => {
+  const loggedUser = window.localStorage.getItem('loggedBlogAppUser')
+  if (loggedUser) {
+    const user = JSON.parse(loggedUser)
+    blogService.setToken(user.token)
+    return user
+  }
+  return null
+}
 
-  useEffect(() => {
-    const loggedUserInLocalStorage = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUserInLocalStorage) {
-      const user = JSON.parse(loggedUserInLocalStorage)
-      userDispatch({ type: 'SET', payload: user })
-      blogService.setToken(user.token)
-    }
-  }, [])
+export const UserContextProvider = ({ children }) => {
+  const [user, userDispatch] = useReducer(userReducer, null, getInitialUser)
 
   return <UserContext.Provider value={[user, userDispatch]}>{children}</UserContext.Provider>
 }

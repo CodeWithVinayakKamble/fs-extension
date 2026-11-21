@@ -14,6 +14,7 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import ErrorBoundary from './components/ErrorBoundary'
 import NotFound from './components/NotFound'
+import UserList from './components/UserList'
 
 // ==== Services ==== //
 import loginServices from './services/login'
@@ -22,7 +23,6 @@ import blogServices from './services/blog'
 // ==== Contexts ==== //
 import { useNotify } from './contexts/NotificationContext'
 import { useUserValue, useUserDispatch } from './contexts/UserContext'
-
 
 const App = () => {
   const activeUser = useUserValue()
@@ -64,15 +64,22 @@ const App = () => {
           <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
             Blog App
           </Typography>
+
           <Box sx={{ display: 'flex', gap: 1 }}>
             <Button color="inherit" component={Link} to="/">
               blogs
             </Button>
+
+            <Button color="inherit" component={Link} to="/users">
+              users
+            </Button>
+
             {activeUser && (
               <Button color="inherit" component={Link} to="/create">
                 new blog
               </Button>
             )}
+
             {activeUser ? (
               <Button color="inherit" onClick={handleLogOut}>
                 logout
@@ -90,8 +97,11 @@ const App = () => {
 
       <ErrorBoundary>
         <Routes>
+
           <Route path="/" element={<BlogList />} />
 
+          <Route path="/users" element={<UserList />} />
+          
           <Route
             path="/login"
             element={
@@ -107,7 +117,9 @@ const App = () => {
           />
 
           <Route path="*" element={<NotFound />} />
+          
         </Routes>
+
       </ErrorBoundary>
     </Container>
   )
