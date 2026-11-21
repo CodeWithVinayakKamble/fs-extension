@@ -2,6 +2,7 @@ import { Card, CardContent, Typography, Button, Box } from '@mui/material'
 import { useBlogs } from '../hooks/useBlogs'
 import { useParams } from 'react-router-dom'
 import { useUserValue } from '../contexts/UserContext'
+import CommentForm from './CommentForm'
 
 const Blog = () => {
   const { id } = useParams()
@@ -61,6 +62,7 @@ const Blog = () => {
           </Box>
           <div>
             <h3>comments</h3>
+            <CommentForm />
             <ul>
               {(comments || []).map((comment, index) => (
                 <li key={index}>{comment}</li>
