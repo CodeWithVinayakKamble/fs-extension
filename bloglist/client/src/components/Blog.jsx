@@ -12,12 +12,12 @@ const Blog = () => {
   if (isPending) {
     return <span>Loading...</span>
   }
-  
+
   if (!blog) {
     return <div>blog not found</div>
   }
 
-  const { title, author, likes, url, user } = blog
+  const { title, author, likes, url, user, comments } = blog
 
   const handleDelete = () => {
     const confirmation = window.confirm(`Remove Blog ${title} by ${author}`)
@@ -59,6 +59,14 @@ const Blog = () => {
               </Button>
             )}
           </Box>
+          <div>
+            <h3>comments</h3>
+            <ul>
+              {(comments || []).map((comment, index) => (
+                <li key={index}>{comment}</li>
+              ))}
+            </ul>
+          </div>
         </CardContent>
       </Card>
     </Box>

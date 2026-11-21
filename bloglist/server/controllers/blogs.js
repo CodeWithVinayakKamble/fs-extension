@@ -2,7 +2,7 @@ const blogRouter = require('express').Router()
 const Blog = require('../models/blog')
 const { userExtractor } = require('../utils/middleware')
 
-// ==== HTTP GET Router ==== //
+// ==== HTTP GET Router (getting Blog from db) ==== //
 blogRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   response.json(blogs)
@@ -42,6 +42,28 @@ blogRouter.post('/', userExtractor, async (request, response) => {
   await savedBlog.populate('user', { username: 1, name: 1 })
   response.status(201).json(savedBlog)
 })
+
+// ===== Comments ==== //
+blogRouter.post('/:id/comments', async (request, response) => {
+  const { comment } = request.body
+  const blogId = request.params.id
+
+  if (!comment) {
+    return response.status(400).json({ error: 'Comment is required' })
+  }
+
+  const blog = await Blog.findById(blogId)
+  if (!blog) {
+    return response.status(404).json({ error: 'Blog not found' })
+  }
+
+  blog.comments = (blog.comments || []).concat(comment)
+
+  const savedBlog = await blog.save()
+  await savedBlog.populate('user', { username: 1, name: 1 })
+  response.status(201).json(savedBlog)
+})
+
 
 // ================================== //
 // HTTP DELETE Route
