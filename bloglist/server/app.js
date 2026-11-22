@@ -10,6 +10,7 @@ const middleware = require('./utils/middleware')
 const blogRouter = require('./controllers/blogs')
 const userRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
+const path = require('path')
 
 // ================================== //
 // App Initialization
@@ -38,6 +39,14 @@ app.use('/api/users', userRouter)
 app.use('/api/login', loginRouter)
 app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogRouter)
+
+// SPA fallback: any non-API GET request serves index.html so React Router takes over
+app.get('*', (request, response, next) => {
+  if (request.path.startsWith('/api')) {
+    return next()
+  }
+  response.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
+})
 
 if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing')

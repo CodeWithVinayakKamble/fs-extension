@@ -64,7 +64,6 @@ blogRouter.post('/:id/comments', async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
-
 // ================================== //
 // HTTP DELETE Route
 // ================================== //
