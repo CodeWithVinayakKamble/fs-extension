@@ -41,11 +41,11 @@ app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogRouter)
 
 // SPA fallback: any non-API GET request serves index.html so React Router takes over
-app.get('*', (request, response, next) => {
-  if (request.path.startsWith('/api')) {
-    return next()
+app.use((request, response, next) => {
+  if (request.method === 'GET' && !request.path.startsWith('/api')) {
+    return response.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
   }
-  response.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
+  next()
 })
 
 if (process.env.NODE_ENV === 'test') {
