@@ -2,63 +2,35 @@
 // Imports
 // ====================================== //
 
-// ==== Dependencies/Lib ==== //
-import { Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom'
+// ==== Dependencies ==== //
+import { Routes, Route, Link, Navigate } from 'react-router-dom'
 import { Container, AppBar, Toolbar, Button, Typography, Box } from '@mui/material'
 
 // ==== Components ==== //
-import Notification from './components/Notification'
-import BlogList from './components/BlogList'
-import LoginForm from './components/LoginForm'
-import Blog from './components/Blog'
-import BlogForm from './components/BlogForm'
-import ErrorBoundary from './components/ErrorBoundary'
-import NotFound from './components/NotFound'
-import UserList from './components/UserList'
-import User from './components/User'
 
-// ==== Services ==== //
-import loginServices from './services/login'
-import blogServices from './services/blog'
-import persistentUserService from './services/persistentUser'
+// ==== blogs
+import BlogList from './components/blogs/BlogList'
+import Blog from './components/blogs/Blog'
+import BlogForm from './components/blogs/BlogForm'
 
-// ==== Contexts ==== //
-import { useNotify } from './contexts/NotificationContext'
-import { useUserValue, useUserDispatch } from './contexts/UserContext'
+// ==== user
+import UserList from './components/users/UserList'
+import User from './components/users/User'
+import UserRegistration from './components/users/UserRegistration'
+
+// ==== auth
+import LoginForm from './components/auth/LoginForm'
+
+// ==== common
+import Notification from './components/common/Notification'
+import ErrorBoundary from './components/common/ErrorBoundary'
+import NotFound from './components/common/NotFound'
+
+// ==== useAuth Hook ==== //
+import { useAuth } from './contexts/UserContext'
 
 const App = () => {
-  const activeUser = useUserValue()
-  const userDispatch = useUserDispatch()
-  const navigate = useNavigate()
-  const notify = useNotify()
-
-  // ====================================== //
-  // Log-in Logic
-  // ====================================== //
-  const handleLogin = async ({ username, password }) => {
-    try {
-      const loggedInUser = await loginServices.login({ username, password })
-      persistentUserService.saveUser(loggedInUser)
-      userDispatch({ type: 'SET', payload: loggedInUser })
-      blogServices.setToken(loggedInUser.token)
-      navigate('/')
-      notify(`${username} log in successfully`, 'success')
-    } catch (error) {
-      notify(error.response.data.error, 'error')
-    }
-  }
-
-  // ====================================== //
-  // Log-out - Logic
-  // ====================================== //
-  const handleLogOut = () => {
-    persistentUserService.removeUser()
-    blogServices.setToken(null)
-    notify(`${activeUser.username} log out successfully`, 'success')
-    userDispatch({ type: 'CLEAR' })
-    navigate('/')
-  }
-
+  const { activeUser, logout } = useAuth()
   return (
     <Container>
       <AppBar position="static" sx={{ mb: 2 }}>
@@ -83,7 +55,7 @@ const App = () => {
             )}
 
             {activeUser ? (
-              <Button color="inherit" onClick={handleLogOut}>
+              <Button color="inherit" onClick={logout}>
                 logout
               </Button>
             ) : (
@@ -107,9 +79,12 @@ const App = () => {
 
           <Route
             path="/login"
-            element={
-              activeUser ? <Navigate replace to={'/'} /> : <LoginForm loginHandle={handleLogin} />
-            }
+            element={activeUser ? <Navigate replace to={'/'} /> : <LoginForm />}
+          />
+
+          <Route
+            path="/register"
+            element={activeUser ? <Navigate replace to="/" /> : <UserRegistration />}
           />
 
           <Route path="/blogs/:id" element={<Blog />} />

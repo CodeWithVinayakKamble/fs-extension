@@ -1,7 +1,7 @@
 import { Card, CardContent, Typography, Button, Box } from '@mui/material'
-import { useBlogs } from '../hooks/useBlogs'
+import { useBlogs } from '../../hooks/useBlogs'
 import { useParams } from 'react-router-dom'
-import { useUserValue } from '../contexts/UserContext'
+import { useUserValue } from '../../contexts/UserContext'
 import CommentForm from './CommentForm'
 
 const Blog = () => {
@@ -43,7 +43,7 @@ const Blog = () => {
             </a>
           </Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Added by {user.name}
+            Added by {user?.name}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography variant="body1" sx={{ fontWeight: 'bold' }}>

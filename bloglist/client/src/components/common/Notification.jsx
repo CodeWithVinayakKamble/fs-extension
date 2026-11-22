@@ -1,5 +1,5 @@
 import { Alert } from '@mui/material'
-import { useNotificationValue } from '../contexts/NotificationContext'
+import { useNotificationValue } from '../../contexts/NotificationContext'
 
 const Notification = () => {
   const notification = useNotificationValue()

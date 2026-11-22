@@ -1,18 +1,18 @@
 import { TextField, Button, Box } from '@mui/material'
-import { useBlogs } from '../hooks/useBlogs'
+import { useBlogs } from '../../hooks/useBlogs'
 import { useParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useField } from '../../hooks/useField'
 
 const CommentForm = () => {
-  const [comment, setComment] = useState('')
+  const { reset: resetComment, ...commentProps } = useField('text', 'comment')
   const { addComment } = useBlogs()
   const { id } = useParams()
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    if (!comment.trim()) return
-    addComment(id, comment)
-    setComment('')
+    if (!commentProps.value.trim()) return
+    addComment(id, commentProps.value)
+    resetComment()
   }
 
   return (
@@ -22,8 +22,8 @@ const CommentForm = () => {
           size="small"
           placeholder="add a comment"
           aria-label="comment"
-          value={comment}
-          onChange={({ target }) => setComment(target.value)}
+          {...commentProps}
+          required
         />
         <Button variant="contained" color="primary" type="submit">
           add comment

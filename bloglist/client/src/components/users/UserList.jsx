@@ -10,7 +10,7 @@ import {
 
 import { Link } from 'react-router-dom'
 
-import { useUsers } from '../hooks/useUsers'
+import { useUsers } from '../../hooks/useUsers'
 
 const UserList = () => {
   const { users, isError, isPending } = useUsers()
